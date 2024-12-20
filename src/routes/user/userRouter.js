@@ -26,10 +26,12 @@ userRouter.get("/users", async (req, res) => {
 });
 
 userRouter.post("/user-add", async (req, res) => {
-  const { firstName, lastName, phoneNumber, password } = req.body;
+  const { name, email, phoneNumber, password } = req.body;
   try {
-    if (!firstName) return res.send(errorRes(401, "firstName Required"));
+    if (!name) return res.send(errorRes(401, "name Required"));
+    if (!email) return res.send(errorRes(401, "email Required"));
     if (!phoneNumber) return res.send(errorRes(401, "phone number Required"));
+    if (!password) return res.send(errorRes(401, "Password Required"));
 
     const oldFlat = await userModel.findOne({
       phoneNumber: phoneNumber,
@@ -37,9 +39,7 @@ userRouter.post("/user-add", async (req, res) => {
 
     if (oldFlat) return res.send(errorRes(401, "Member Already Exist"));
 
-    var id = `user-${firstName ?? ""}-${
-      lastName ?? ""
-    }-${Date.now()}`.toLowerCase();
+    var id = `user-${name ?? ""}-${Date.now()}`.toLowerCase();
 
     const hashPassword = await encryptPassword(password);
 
@@ -47,11 +47,34 @@ userRouter.post("/user-add", async (req, res) => {
       ...req.body,
       _id: id,
       password: hashPassword,
+      role: "admin",
     });
+
+    const dataToken = {
+      _id: newFlat._id,
+      email: newFlat.email,
+      role: newFlat.role,
+    };
+
+    const accessToken = createJwtToken(
+      dataToken,
+      config.SECRET_ACCESS_KEY,
+      "15m"
+    );
+    const refreshToken = createJwtToken(
+      dataToken,
+      config.SECRET_REFRESH_KEY,
+      "7d"
+    );
 
     return res.send(
       successRes(200, "User added", {
-        data: newFlat,
+        data: {
+          ...newFlat._doc,
+
+          accessToken,
+          refreshToken,
+        },
       })
     );
   } catch (error) {
@@ -102,8 +125,6 @@ userRouter.post("/user-login", async (req, res, next) => {
       role: { $ne: "resident" },
     });
 
-    // .lean();
-
     if (!employeeDb) {
       return res.send(errorRes(400, errorMessage.EMP_EMAIL_NOT_EXIST));
     }
@@ -141,9 +162,11 @@ userRouter.post("/user-login", async (req, res, next) => {
 
     return res.send(
       successRes(200, errorMessage.EMP_LOGIN_SUCCESS, {
-        data: userWithoutPassword,
-        accessToken,
-        refreshToken,
+        data: {
+          ...userWithoutPassword,
+          accessToken,
+          refreshToken,
+        },
       })
     );
   } catch (error) {

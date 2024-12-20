@@ -14,8 +14,7 @@ export const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6,
   },
-  firstName: { type: String, default: null },
-  lastName: { type: String, default: null },
+  name: { type: String, default: null },
   phoneNumber: { type: Number, default: null },
   gender: {
     type: String,
@@ -27,6 +26,10 @@ export const userSchema = new mongoose.Schema({
     default: "employee",
     // enum: ["employee", "admin", "customer"],
   },
+  buildingNo: { type: Number, default: null },
+  floor: { type: Number, default: null },
+  flatNo: { type: Number, default: null },
+  unitNo: { type: String, default: null },
 });
 const userModel = mongoose.model("users", userSchema, "users");
 export default userModel;

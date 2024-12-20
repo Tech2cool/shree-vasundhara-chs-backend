@@ -6,7 +6,7 @@ const chronologyRouter = Router();
 
 chronologyRouter.get("/chronology", async (req, res) => {
   try {
-    const resp = await chronoModel.find().sort({ date: -1 });
+    const resp = await chronoModel.find().sort({ date: 1 });
     return res.send(
       successRes(200, "chronology", {
         data: resp,
@@ -60,6 +60,24 @@ chronologyRouter.post("/chronology-update/:id", async (req, res) => {
     return res.send(
       successRes(200, "Chronology Updated", {
         data: updatedData,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.send(errorRes(500, "Server Error"));
+  }
+});
+
+chronologyRouter.delete("/chronology-delete/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    if (!id) return res.send(errorRes(401, "no id"));
+
+    await chronoModel.findByIdAndDelete(id);
+
+    return res.send(
+      successRes(200, "Chronology deleted", {
+        data: true,
       })
     );
   } catch (error) {

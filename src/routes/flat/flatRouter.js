@@ -155,9 +155,10 @@ flatRouter.post("/flat-otp-generate", async (req, res, next) => {
       $or: [{ phoneNumber: phoneNumber }],
     });
     let url = "https://hooks.zapier.com/hooks/catch/9993809/2h0j5ri/";
-
     if (findOldOtp) {
-      url += `otp=${findOldOtp.otp}&phoneNumber=+91${phoneNumber}&name=${name}&flatNo=${flatNo}`;
+      url += `otp=${findOldOtp.otp}&phoneNumber=${encodeURIComponent(
+        "+91"
+      )}${phoneNumber}&name=${name}&flatNo=${flatNo}`;
 
       const resp = await axios.post(url);
       // console.log(resp);
@@ -178,7 +179,10 @@ flatRouter.post("/flat-otp-generate", async (req, res, next) => {
       message: "Vasundhara Login Verification Code",
     });
     const savedOtp = await newOtpModel.save();
-    url += `otp=${savedOtp.otp}&phoneNumber=+91${phoneNumber}&name=${name}&flatNo=${flatNo}`;
+    url += `otp=${savedOtp.otp}&phoneNumber=${encodeURIComponent(
+      "+91"
+    )}${phoneNumber}&name=${name}&flatNo=${flatNo}`;
+    console.log(url);
 
     const resp = await axios.post(url);
 
