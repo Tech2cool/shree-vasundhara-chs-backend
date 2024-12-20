@@ -158,7 +158,7 @@ flatRouter.post("/flat-otp-generate", async (req, res, next) => {
     if (findOldOtp) {
       url += `otp=${findOldOtp.otp}&phoneNumber=${encodeURIComponent(
         "+91"
-      )}${phoneNumber}&name=${name}&flatNo=${flatNo}`;
+      )}${phoneNumber}&name=${encodeURIComponent(name)}&flatNo=${flatNo}`;
 
       const resp = await axios.post(url);
       // console.log(resp);
