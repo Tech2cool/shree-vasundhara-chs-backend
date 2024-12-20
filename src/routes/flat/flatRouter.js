@@ -156,7 +156,7 @@ flatRouter.post("/flat-otp-generate", async (req, res, next) => {
     });
     let url = "https://hooks.zapier.com/hooks/catch/9993809/286pnju/";
     if (findOldOtp) {
-      url += `otp=${findOldOtp.otp}&phoneNumber=${encodeURIComponent(
+      url += `?otp=${findOldOtp.otp}&phoneNumber=${encodeURIComponent(
         "+91"
       )}${phoneNumber}&name=${encodeURIComponent(name)}&flatNo=${flatNo}`;
 
