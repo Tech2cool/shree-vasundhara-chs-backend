@@ -10,16 +10,19 @@ export const flatSchema = new mongoose.Schema({
     default: null,
   },
   name: { type: String, default: null },
-  buildingNo: { type: String, required: true },
-  wing: { type: String, required: true },
-  flatNo: { type: String, required: true },
+  buildingNo: { type: Number, required: true },
+  floor: { type: Number, required: true },
+  flatNo: { type: Number, required: true },
   unitNo: { type: String, required: true },
   phoneNumber: { type: Number, required: true },
+  countryCode: { type: String, default: "+91" },
   society: { type: String, default: "" },
+  societyName: { type: String, default: "" },
   refreshToken: { type: String, default: null },
+  password: { type: String, default: null },
   role: {
     type: String,
-    default: "member",
+    default: "resident",
   },
 });
 const flatModel = mongoose.model("flat", flatSchema, "flats");

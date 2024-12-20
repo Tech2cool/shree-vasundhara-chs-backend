@@ -29,6 +29,7 @@ export const createJwtToken = (data, secretKey, validity) => {
   const token = jwt.sign({ data }, secretKey, options);
   return token;
 };
+
 // export const createJwtToken = (data, secretKey, validity) => {
 //   if (validity) {
 //     const token = jwt.sign({ data, exp: validity }, secretKey);

@@ -6,10 +6,10 @@ const chronologyRouter = Router();
 
 chronologyRouter.get("/chronology", async (req, res) => {
   try {
-    const resp = await chronoModel.find();
+    const resp = await chronoModel.find().sort({ date: -1 });
     return res.send(
       successRes(200, "chronology", {
-        dat: resp,
+        data: resp,
       })
     );
   } catch (error) {
@@ -34,7 +34,7 @@ chronologyRouter.post("/chronology-add", async (req, res) => {
 
     return res.send(
       successRes(200, "chronology added", {
-        dat: newChrono,
+        data: newChrono,
       })
     );
   } catch (error) {
@@ -59,7 +59,7 @@ chronologyRouter.post("/chronology-update/:id", async (req, res) => {
 
     return res.send(
       successRes(200, "Chronology Updated", {
-        dat: updatedData,
+        data: updatedData,
       })
     );
   } catch (error) {
