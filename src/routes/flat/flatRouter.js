@@ -161,7 +161,8 @@ flatRouter.post("/flat-otp-generate", async (req, res, next) => {
       )}${phoneNumber}&name=${encodeURIComponent(name)}&flatNo=${flatNo}`;
 
       const resp = await axios.post(url);
-      // console.log(resp);
+      console.log(url);
+      console.log(resp.data);
       return res.send(
         successRes(200, "otp Sent to Client", {
           data: findOldOtp,
@@ -179,12 +180,13 @@ flatRouter.post("/flat-otp-generate", async (req, res, next) => {
       message: "Vasundhara Login Verification Code",
     });
     const savedOtp = await newOtpModel.save();
-    url += `otp=${savedOtp.otp}&phoneNumber=${encodeURIComponent(
+    url += `?otp=${savedOtp.otp}&phoneNumber=${encodeURIComponent(
       "+91"
     )}${phoneNumber}&name=${name}&flatNo=${flatNo}`;
     console.log(url);
 
     const resp = await axios.post(url);
+    console.log(resp.data);
 
     return res.send(
       successRes(200, "otp Sent to Client", {
