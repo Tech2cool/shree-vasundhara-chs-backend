@@ -151,14 +151,21 @@ flatRouter.post("/flat-updates", async (req, res) => {
 flatRouter.post("/flat-otp-generate", async (req, res, next) => {
   const { name, email, society, phoneNumber, docId, flatNo } = req.body;
   try {
+    console.log(req.body);
+
     const findOldOtp = await otpModel.findOne({
       $or: [{ phoneNumber: phoneNumber }],
     });
     let url = "https://hooks.zapier.com/hooks/catch/9993809/286pnju/";
     if (findOldOtp) {
+      // url += `?otp=${findOldOtp.otp}&phoneNumber=${encodeURIComponent(
+      //   "+91"
+      // )}${phoneNumber}&name=${encodeURIComponent(name)}&flatNo=${flatNo}`;
       url += `?otp=${findOldOtp.otp}&phoneNumber=${encodeURIComponent(
         "+91"
-      )}${phoneNumber}&name=${encodeURIComponent(name)}&flatNo=${flatNo}`;
+      )}${phoneNumber}&name=${encodeURIComponent(
+        name
+      )}&flatNo=${encodeURIComponent(flatNo)}`;
 
       const resp = await axios.post(url);
       console.log(url);
@@ -182,7 +189,9 @@ flatRouter.post("/flat-otp-generate", async (req, res, next) => {
     const savedOtp = await newOtpModel.save();
     url += `?otp=${savedOtp.otp}&phoneNumber=${encodeURIComponent(
       "+91"
-    )}${phoneNumber}&name=${name}&flatNo=${flatNo}`;
+    )}${phoneNumber}&name=${encodeURIComponent(
+      name
+    )}&flatNo=${encodeURIComponent(flatNo)}`;
     console.log(url);
 
     const resp = await axios.post(url);
