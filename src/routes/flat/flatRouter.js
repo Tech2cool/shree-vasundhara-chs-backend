@@ -8,6 +8,7 @@ import path from "path";
 import otpModel from "../../models/otp.model.js";
 import axios from "axios";
 import { generateOTP } from "../../utils/helper.js";
+import { authenticateToken } from "../../middleware/auth.middleware.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,7 +28,7 @@ flatRouter.get("/flats", async (req, res) => {
   }
 });
 
-flatRouter.post("/flat-add", async (req, res) => {
+flatRouter.post("/flat-add", authenticateToken, async (req, res) => {
   const { buildingNo, floor, flatNo, unitNo, name, phoneNumber, society } =
     req.body;
   try {
@@ -63,7 +64,7 @@ flatRouter.post("/flat-add", async (req, res) => {
   }
 });
 
-flatRouter.post("/flat-update/:id", async (req, res) => {
+flatRouter.post("/flat-update/:id", authenticateToken, async (req, res) => {
   const { buildingNo, wing, flatNo, unitNo, name, phoneNumber } = req.body;
   try {
     if (!req.body) return res.send(errorRes(401, "Body Required"));
@@ -140,7 +141,7 @@ flatRouter.post("/flat-updates", async (req, res) => {
           unitNo,
         });
       }
-      await flatModel.insertMany(dataTuPush);
+      // await flatModel.insertMany(dataTuPush);
       // Send the results only after processing is done
       return res.send(dataTuPush);
     })

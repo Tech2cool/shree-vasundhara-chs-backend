@@ -9,6 +9,7 @@ import {
   encryptPassword,
 } from "../../utils/helper.js";
 import config from "../../config/config.js";
+import { authenticateToken } from "../../middleware/auth.middleware.js";
 
 const userRouter = Router();
 
@@ -25,7 +26,7 @@ userRouter.get("/users", async (req, res) => {
   }
 });
 
-userRouter.post("/user-add", async (req, res) => {
+userRouter.post("/user-add", authenticateToken, async (req, res) => {
   const { name, email, phoneNumber, password } = req.body;
   try {
     if (!name) return res.send(errorRes(401, "name Required"));
@@ -83,7 +84,7 @@ userRouter.post("/user-add", async (req, res) => {
   }
 });
 
-userRouter.post("/user-update/:id", async (req, res) => {
+userRouter.post("/user-update/:id", authenticateToken, async (req, res) => {
   const { buildingNo, wing, flatNo, unitNo, name, phoneNumber } = req.body;
   try {
     if (!req.body) return res.send(errorRes(401, "Body Required"));
