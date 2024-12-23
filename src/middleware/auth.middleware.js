@@ -11,9 +11,7 @@ export const authenticateToken = async (req, res, next) => {
     // console.log(`acces: ${accessToken} `);
     // console.log(`refresh: ${refreshToken} `);
     if (!accessToken) {
-      return res
-        .status(401)
-        .json({ message: "Invalid session, please re-login" });
+      return res.status(401).json({ message: "Unauthorized access" });
     }
 
     try {
